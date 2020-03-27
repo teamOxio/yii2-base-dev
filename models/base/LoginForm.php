@@ -2,6 +2,7 @@
 
 namespace app\models\base;
 
+
 use app\common\Constants;
 use app\models\activerecord\Users;
 use Yii;
