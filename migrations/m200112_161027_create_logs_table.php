@@ -22,7 +22,7 @@ class m200112_161027_create_logs_table extends Migration
             'particulars' => $this->text(),
             'time' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'ip' => $this->string(64)->notNull(),
-            'useragent' => $this->string(100)->notNull(),
+            'useragent' => $this->string(800)->notNull(),
             'type' => $this->string(100),
             'data' => $this->text(),
             'country_id' => $this->integer(),

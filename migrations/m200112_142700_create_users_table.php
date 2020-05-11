@@ -37,7 +37,7 @@ class m200112_142700_create_users_table extends Migration
             'two_fa_secret' => $this->string(200),
             'auth_key' => $this->string(500)->notNull(),
             'ip' => $this->string(50)->notNull(),
-            'useragent' => $this->string(200)->notNull(),
+            'useragent' => $this->string(800)->notNull(),
             'role_id' => $this->integer()->notNull(),
             'referral_code' => $this->string(200)->notNull(),
             'referred_by' => $this->integer(),

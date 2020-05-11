@@ -21,7 +21,7 @@ class m200112_160831_create_user_login_history_table extends Migration
             'user_id' => $this->integer()->notNull(),
             'time' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'ip' => $this->string(64)->notNull(),
-            'useragent' => $this->string(100)->notNull(),
+            'useragent' => $this->string(800)->notNull(),
             'country_id' => $this->integer(),
         ]);
 

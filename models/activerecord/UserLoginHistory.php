@@ -37,7 +37,7 @@ class UserLoginHistory extends BaseActiveRecord
             [['user_id', 'country_id'], 'integer'],
             [['time'], 'safe'],
             [['ip'], 'string', 'max' => 64],
-            [['useragent'], 'string', 'max' => 100],
+            [['useragent'], 'string', 'max' => 800],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];

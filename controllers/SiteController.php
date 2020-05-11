@@ -61,6 +61,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        //using any worker
+
+//        $task  = BackgroundTasks::create([
+//            'type'=>Constants::BACKGROUND_TASK_TYPE_PING,
+//            'data'=>null, //can be anything you want preferably a serialized object
+//            'reference'=>null, //can be anything you want, preferably reference to a primary key
+//        ]);
+//
+//        Yii::$app->queue->push(new PingWorker([
+//         'task'=>$task
+//        ]));
+
         return $this->render('index');
     }
 

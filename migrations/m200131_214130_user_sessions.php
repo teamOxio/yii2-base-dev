@@ -14,7 +14,7 @@ class m200131_214130_user_sessions extends Migration
             'user_id' => $this->integer()->notNull(),
             'time' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'ip' => $this->string(50),
-            'useragent' => $this->string(100),
+            'useragent' => $this->string(800),
             'expires' => $this->timestamp()->defaultValue(null),
             'hash' => $this->string(128)->notNull(),
         ]);

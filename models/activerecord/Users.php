@@ -128,9 +128,10 @@ class Users extends BaseActiveRecord implements IdentityInterface
             [['status_id',  'country_id', 'is_two_fa', '!role_id',  'referred_by'], 'integer'],
             [['time', 'updated_on'], 'safe'],
             [['identifier', 'auth_key'], 'string', 'max' => 500],
-            [['username', 'first_name', 'last_name', 'email', 'two_fa_secret', 'useragent', 'referral_code'], 'string', 'max' => 200],
+            [['username', 'first_name', 'last_name', 'email', 'two_fa_secret', 'referral_code'], 'string', 'max' => 200],
+
             [['password'], 'string', 'max' => 600],
-            [['code'], 'string', 'max' => 800],
+            [['code','useragent'], 'string', 'max' => 800],
             [['ip'], 'string', 'max' => 50],
 
             [['email'], 'email'],

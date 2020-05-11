@@ -37,7 +37,7 @@ class UserSessions extends BaseActiveRecord
             [['user_id'], 'integer'],
             [['time', 'expires'], 'safe'],
             [['ip'], 'string', 'max' => 50],
-            [['useragent'], 'string', 'max' => 100],
+            [['useragent'], 'string', 'max' => 800],
             [['hash'], 'string', 'max' => 128],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
