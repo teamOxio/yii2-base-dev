@@ -16,7 +16,7 @@ class m200111_073852_create_user_roles_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(50)->notNull(),
             'modules' => $this->text(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
     }
 
     /**

@@ -12,16 +12,16 @@ use app\common\Constants;
  * @property int $attempts
  * @property string $type
  * @property string|null $data
- * @property string $created_at
- * @property string $updated_at
+ * @property string $time
+ * @property string $updated_on
  * @property string|null $response
  * @property string|null $reference
  */
 class BackgroundTasks extends BaseActiveRecord
 {
+    public $attempts;
     public function beforeValidate()
     {
-        $this->updated_at = date(Constants::PHP_DATE_FORMAT);
         return parent::beforeValidate();
     }
 
@@ -42,7 +42,7 @@ class BackgroundTasks extends BaseActiveRecord
             [['type'], 'required'],
             [['response'], 'string'],
             [['attempts'],'integer'],
-            [['data','created_at', 'updated_at'], 'safe'],
+            [['data','time', 'updated_on'], 'safe'],
             [['type'], 'string', 'max' => 100],
         ];
     }
@@ -56,8 +56,8 @@ class BackgroundTasks extends BaseActiveRecord
             'id' => 'ID',
             'type' => 'Type',
             'data' => 'Data',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'time' => 'Time',
+            'updated_on' => 'Updated On',
             'response' => 'Response',
             'reference' => 'Reference',
             'attempts' => 'Attempts',

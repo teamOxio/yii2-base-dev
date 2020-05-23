@@ -16,11 +16,11 @@ class m200223_151132_create_background_tasks_table extends Migration
             'id' => $this->primaryKey(),
             'type' => $this->string(100)->notNull(),
             'data' => $this->text(),
-            'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
-            'updated_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
+            'time' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
+            'updated_on' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
             'response' => $this->text(),
             'reference' => $this->string(800),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
     }
 
     /**

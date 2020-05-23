@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $queue = require __DIR__ . '/queue.php';
+$common = require __DIR__ . '/common.php';
 
 $config = [
     'id' => 'basic-console',
@@ -38,6 +39,8 @@ $config = [
     ],
     */
 ];
+
+$config=array_merge($config,$common);
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

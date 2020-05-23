@@ -20,7 +20,7 @@ class m200112_134221_create_countries_table extends Migration
             'iso3' => $this->string(3),
             'numcode' => $this->integer(6),
             'phonecode' => $this->integer(5)->notNull(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
     }
 
     /**

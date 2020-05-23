@@ -16,7 +16,7 @@ class m200111_073440_create_settings_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(150),
             'value' => $this->text(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
     }
 
     /**

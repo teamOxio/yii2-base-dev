@@ -74,15 +74,10 @@ class Users extends BaseActiveRecord implements IdentityInterface
 
             $this->auth_key = Yii::$app->security->generateRandomString();
 
-            $this->ip = Yii::$app->getRequest()->getUserIP();
-
-            $this->useragent = Yii::$app->getRequest()->getUserAgent();
             $this->role_id = Constants::USER_ROLE_USER;
 
             $this->referral_code = $this->generateReferralCode();
             $this->referred_by = $sponsor->id;
-
-            $this->country_id = Helper::getCountryIDFromIP($this->ip);
 
         }
 
@@ -378,8 +373,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
         //insert
         $u = new UserLoginHistory();
         $u->user_id = $this->id;
-        $u->ip = Yii::$app->request->getUserIP();
-        $u->useragent = Yii::$app->request->getUserAgent();
+        $u->validate();
 
         try {
             $db = new Database(Yii::getAlias("@app") . '/data/ip2location.bin', Database::FILE_IO);
@@ -404,7 +398,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
 
         SystemLog::log(
             $this->id,
-            'Logged in from '.Yii::$app->request->getUserIP()." using device ".Yii::$app->request->getUserAgent(),
+            'Logged in from '.$u->ip." using device ".$u->useragent,
             Constants::LOG_TYPE_USER_LOGIN,
             $this->username
         );
@@ -417,11 +411,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
             return false;
         }
 
-
-        $hash_string = $this->username.':'.Yii::$app->request->getUserAgent().
-            ':'.Yii::$app->request->getUserIP();
-
-
+        $hash_string = $this->username.':'.$u->useragent.':'.$u->ip;
         $hash = hash("sha256",$hash_string);
 
         //create session

@@ -12,33 +12,57 @@ abstract class BaseActiveRecord extends ActiveRecord
 {
     public function beforeValidate()
     {
-        if($this->isNewRecord) {
-            if ($this->hasAttribute('identifier')) {
+        if($this->isNewRecord)
+        {
+            if ($this->hasAttribute('identifier'))
+            {
                 $this->identifier = $this->generateIdentifier();
             }
 
             $country = null;
 
-            if($this->hasAttribute('ip')) {
-                if(Yii::$app->request->isConsoleRequest) {
+            if($this->hasAttribute('ip'))
+            {
+                if(Yii::$app->request->isConsoleRequest)
+                {
                     $this->setAttribute('ip', "::1");
                 }
-                else {
+                else
+                {
                     $this->setAttribute('ip', Yii::$app->request->getUserIP());
                     $country = Helper::getCountryIDFromIP($this->getAttribute('ip'));
                 }
 
             }
 
-            if($this->hasAttribute('useragent')){
-                $this->setAttribute('useragent', Yii::$app->request->getUserAgent());
+            if($this->hasAttribute('useragent'))
+            {
+                if(Yii::$app->request->isConsoleRequest)
+                {
+                    $this->setAttribute('useragent', 'console');
+                }
+                else
+                {
+                    $this->setAttribute('useragent', Yii::$app->request->getUserAgent());
+                }
             }
 
-            if($this->hasAttribute('ip_country_id'))
-                $this->setAttribute('ip_country_id',$country);
+            if($this->hasAttribute('country_id'))
+            {
+                $this->setAttribute('country_id', $country);
+            }
 
-
-
+            if($this->hasAttribute('time'))
+            {
+                if($this->getAttribute('time')=="" || $this->getAttribute('time')==null)
+                {
+                    $this->setAttribute('time', date(Constants::PHP_DATE_FORMAT));
+                }
+            }
+        }
+        if($this->hasAttribute('updated_on'))
+        {
+            $this->setAttribute('updated_on', date(Constants::PHP_DATE_FORMAT));
         }
         return parent::beforeValidate();
     }

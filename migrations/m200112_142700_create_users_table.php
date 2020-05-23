@@ -42,7 +42,7 @@ class m200112_142700_create_users_table extends Migration
             'referral_code' => $this->string(200)->notNull(),
             'referred_by' => $this->integer(),
 
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `status_id`
         $this->createIndex(

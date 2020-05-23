@@ -15,7 +15,7 @@ class m200112_133418_create_user_status_table extends Migration
         $this->createTable('{{%user_status}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(50)->notNull(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
     }
 
     /**

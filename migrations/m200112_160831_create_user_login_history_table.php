@@ -23,7 +23,7 @@ class m200112_160831_create_user_login_history_table extends Migration
             'ip' => $this->string(64)->notNull(),
             'useragent' => $this->string(800)->notNull(),
             'country_id' => $this->integer(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `user_id`
         $this->createIndex(

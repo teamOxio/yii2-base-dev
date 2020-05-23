@@ -26,7 +26,7 @@ class m200112_161027_create_logs_table extends Migration
             'type' => $this->string(100),
             'data' => $this->text(),
             'country_id' => $this->integer(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `user_id`
         $this->createIndex(

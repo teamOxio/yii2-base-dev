@@ -17,7 +17,7 @@ class m200131_214130_user_sessions extends Migration
             'useragent' => $this->string(800),
             'expires' => $this->timestamp()->defaultValue(null),
             'hash' => $this->string(128)->notNull(),
-        ]);
+        ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `user_id`
         $this->createIndex(

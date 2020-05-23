@@ -15,7 +15,7 @@
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "yiisoft/yii2-queue": "~2.0.0 || ~2.1.0",
+        "yiisoft/yii2-queue": "^2.3",
         "enqueue/amqp-lib": "^0.10.0@dev",
         "ip2location/ip2location-php": "dev-master",
         "2amigos/2fa-library": "^1.0@dev",

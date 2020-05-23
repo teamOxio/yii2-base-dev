@@ -28,19 +28,6 @@ class SystemLog
         $log->type = $type;
         $log->data = $data;
 
-        if(!Yii::$app->request->isConsoleRequest)
-        {
-            $log->ip = Yii::$app->request->getUserIP();
-            $log->useragent = Yii::$app->request->getUserAgent();
-
-            $log->country_id = Helper::getCountryIDFromIP($log->ip);
-
-        }
-        else{
-            $log->ip ="::1";
-            $log->useragent ="console";
-        }
-
         if($log->save())
             return $log->id;
         else {
