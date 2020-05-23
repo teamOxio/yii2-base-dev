@@ -1,3 +1,7 @@
+##Version 0.5.2 - by Rohit Oberoi
+```
+YII_ENV changed on web/index.php 
+```
 ##Version 0.5.1 - by Rohit Oberoi
 ```
 Yii2 queue version updated in composer.json

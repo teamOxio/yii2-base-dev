@@ -5,7 +5,7 @@ $username='';
 $password='';
 
 //for offline development
-if(defined(YII_ENV))
+if(defined('YII_ENV'))
 {
     if(YII_ENV == "dev")
     {
