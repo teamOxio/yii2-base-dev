@@ -1,3 +1,9 @@
+##Version 0.5.3 - by Prabhjyot Singh
+```
+Added ProtectedController
+Added UserController which is a ProtectedController
+Added Two Factor sample test in UserController user/two-fa
+```
 ##Version 0.5.2 - by Rohit Oberoi
 ```
 YII_ENV changed on web/index.php 

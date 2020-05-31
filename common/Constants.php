@@ -40,6 +40,9 @@ class Constants
     const LOG_TYPE_USER_ACCOUNT_ACTIVATED = "user_account_activated";
     const LOG_TYPE_USER_PASSWORD_CHANGED = "user_password_changed";
 
+    const LOG_TYPE_DISABLE_2FA = 'disable_2fa';
+    const LOG_TYPE_ENABLE_2FA = 'enable_2fa';
+
     const SETTINGS_RECAPTCHA_KEY = 1;
     const SETTINGS_RECAPTCHA_SECRET = 2;
 
@@ -56,6 +59,8 @@ class Constants
     const CRYPTO_BUFFER = 0; //increase the price of crypto prices using this as a percentage
     const CRYPTO_WITHDRAWAL_BUFFER = 0; //decrease the price of crypto prices using this as a percentage
 
+    const CMD_ENABLE_TWO_FA = 'enable_two_fa';
+    const CMD_DISABLE_TWO_FA = 'disable_two_fa';
 
 }
 
