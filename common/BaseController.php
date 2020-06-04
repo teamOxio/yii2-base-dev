@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components;
+namespace app\common;
 
 
 use app\models\activerecord\Users;

@@ -6,10 +6,14 @@ use app\common\BaseActiveRecord;
 use app\common\Constants;
 use app\common\Helper;
 use app\common\SystemLog;
+use Da\QrCode\QrCode;
 use Da\TwoFA\Manager;
+use Da\TwoFA\Service\GoogleQrCodeUrlGeneratorService;
+use Da\TwoFA\Service\TOTPSecretKeyUriGeneratorService;
 use Exception;
 use IP2Location\Database;
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
 use yii\web\IdentityInterface;
 
@@ -517,9 +521,33 @@ class Users extends BaseActiveRecord implements IdentityInterface
 
 
 
-    public function verify2FA($code){
+    public function verify2FA($code,$temp_secret = false){
+        if($code == "")
+            return false;
+
+        $secret = ($temp_secret ? $temp_secret : $this->two_fa_secret);
+
         $manager = new Manager();
-            return $manager->verify($code, $this->two_fa_secret);
+        return $manager->verify($code, $secret);
+    }
+
+    public function init2FA($overwrite = false){
+        $manager = new Manager();
+        $secret = $manager->generateSecretKey();
+
+        if($overwrite)
+            Yii::$app->session->remove('two_fa_secret');
+
+        if(!Yii::$app->session->has('two_fa_secret'))
+            Yii::$app->session->set('two_fa_secret',$secret);
+
+        $totpUri = (new TOTPSecretKeyUriGeneratorService(Yii::$app->name,
+            $this->email,
+            $secret))->run();
+
+        $uri = (new GoogleQrCodeUrlGeneratorService($totpUri))->run();
+
+        return compact('secret','uri');
     }
 
     public function getFullName()
@@ -551,4 +579,38 @@ class Users extends BaseActiveRecord implements IdentityInterface
         Yii::$app->user->logout();
     }
 
+    public function disable2FA(){
+        $this->two_fa_secret = null;
+        $this->is_two_fa = Constants::NO_FLAG;
+        $this->save();
+
+        SystemLog::log($this->id,
+            'Two FA disabled',
+            Constants::CMD_DISABLE_TWO_FA,
+        );
+
+        return true;
+    }
+
+    public function enable2FA($secret = false){
+
+        if($secret === false && !Yii::$app->session->has('two_fa_secret'))
+            return false;
+        else if($secret === false)
+            $secret = Yii::$app->session->get('two_fa_secret');
+
+        $this->two_fa_secret = $secret;
+        $this->is_two_fa = Constants::YES_FLAG;
+        $this->save();
+
+        Yii::$app->session->remove('two_fa_secret');
+
+        SystemLog::log($this->id,
+            'Two FA enabled',
+            Constants::CMD_ENABLE_TWO_FA,
+        );
+
+        return true;
+
+    }
 }

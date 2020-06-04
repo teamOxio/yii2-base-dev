@@ -12,6 +12,7 @@ Includes:
 - Support for RabbitMQ background workers using configuration in config/queue.php
 - Admin account: username: backoffice, password: test@123
 - Theme support, put your theme in themes/backend/views, place your theme web accessible assets under web/backend and configure app\BackendAsset with css and js files.
+- TwoFA test - check UserController and after logging in open user/two-fa
 
 Helper Methods available:
 
