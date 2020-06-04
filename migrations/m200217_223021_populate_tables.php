@@ -302,7 +302,7 @@ class m200217_223021_populate_tables extends Migration
             'status_id' => Constants::USER_STATUS_ACTIVE,
             'first_name' => 'Back',
             'last_name' => 'Office',
-            'country_id' => 99,//INDIA
+            'ip_country_id' => 99,//INDIA
             'auth_key' => Yii::$app->security->generateRandomString(),
             'ip' => "::1",
             'useragent' => "system",

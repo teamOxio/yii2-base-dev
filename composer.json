@@ -23,7 +23,8 @@
         "guzzlehttp/guzzle": "^5.3",
         "phpseclib/phpseclib": "~2.0",
         "ext-json": "*",
-      "ext-curl": "*"
+      "ext-curl": "*",
+        "symfony/dotenv": "^5.2@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -22,7 +22,7 @@ class m200112_160831_create_user_login_history_table extends Migration
             'time' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'ip' => $this->string(64)->notNull(),
             'useragent' => $this->string(800)->notNull(),
-            'country_id' => $this->integer(),
+            'ip_country_id' => $this->integer(),
         ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `user_id`
@@ -42,18 +42,18 @@ class m200112_160831_create_user_login_history_table extends Migration
             'CASCADE'
         );
 
-        // creates index for column `country_id`
+        // creates index for column `ip_country_id`
         $this->createIndex(
-            '{{%idx-user_login_history-country_id}}',
+            '{{%idx-user_login_history-ip_country_id}}',
             '{{%user_login_history}}',
-            'country_id'
+            'ip_country_id'
         );
 
         // add foreign key for table `{{%countries}}`
         $this->addForeignKey(
-            '{{%fk-user_login_history-country_id}}',
+            '{{%fk-user_login_history-ip_country_id}}',
             '{{%user_login_history}}',
-            'country_id',
+            'ip_country_id',
             '{{%countries}}',
             'id',
             'CASCADE'
@@ -79,13 +79,13 @@ class m200112_160831_create_user_login_history_table extends Migration
 
         // drops foreign key for table `{{%countries}}`
         $this->dropForeignKey(
-            '{{%fk-user_login_history-country_id}}',
+            '{{%fk-user_login_history-ip_country_id}}',
             '{{%user_login_history}}'
         );
 
-        // drops index for column `country_id`
+        // drops index for column `ip_country_id`
         $this->dropIndex(
-            '{{%idx-user_login_history-country_id}}',
+            '{{%idx-user_login_history-ip_country_id}}',
             '{{%user_login_history}}'
         );
 

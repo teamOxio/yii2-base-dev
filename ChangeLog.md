@@ -1,3 +1,10 @@
+##Version 0.5.3 - by Rohit Oberoi
+```
+culumn updated from country_id to ip_country_id in migrations and models
+Load data from $_ENV
+Encrypt and Decrpty data in models. Code added in BaseActiveRecord 
+```
+
 ##Version 0.5.2 - by Rohit Oberoi
 ```
 YII_ENV changed on web/index.php 

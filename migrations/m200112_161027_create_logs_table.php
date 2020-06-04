@@ -25,7 +25,7 @@ class m200112_161027_create_logs_table extends Migration
             'useragent' => $this->string(800)->notNull(),
             'type' => $this->string(100),
             'data' => $this->text(),
-            'country_id' => $this->integer(),
+            'ip_country_id' => $this->integer(),
         ],\app\common\Constants::DB_TABLE_OPTIONS);
 
         // creates index for column `user_id`
@@ -45,18 +45,18 @@ class m200112_161027_create_logs_table extends Migration
             'CASCADE'
         );
 
-        // creates index for column `country_id`
+        // creates index for column `ip_country_id`
         $this->createIndex(
-            '{{%idx-logs-country_id}}',
+            '{{%idx-logs-ip_country_id}}',
             '{{%logs}}',
-            'country_id'
+            'ip_country_id'
         );
 
         // add foreign key for table `{{%countries}}`
         $this->addForeignKey(
-            '{{%fk-logs-country_id}}',
+            '{{%fk-logs-ip_country_id}}',
             '{{%logs}}',
-            'country_id',
+            'ip_country_id',
             '{{%countries}}',
             'id',
             'CASCADE'
@@ -85,13 +85,13 @@ class m200112_161027_create_logs_table extends Migration
 
         // drops foreign key for table `{{%countries}}`
         $this->dropForeignKey(
-            '{{%fk-logs-country_id}}',
+            '{{%fk-logs-ip_country_id}}',
             '{{%logs}}'
         );
 
-        // drops index for column `country_id`
+        // drops index for column `ip_country_id`
         $this->dropIndex(
-            '{{%idx-logs-country_id}}',
+            '{{%idx-logs-ip_country_id}}',
             '{{%logs}}'
         );
 

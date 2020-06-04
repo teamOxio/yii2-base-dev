@@ -25,7 +25,7 @@ use yii\web\IdentityInterface;
  * @property string $password
  * @property int $status_id
  * @property string|null $code
- * @property int|null $country_id
+ * @property int|null $ip_country_id
  * @property string $time
  * @property string $updated_on
  * @property int $is_two_fa
@@ -120,7 +120,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
     {
         return [
             [['!identifier', 'username', 'email', 'password', 'status_id', '!auth_key', 'ip', 'useragent', 'role_id', 'referral_code', ], 'required'],
-            [['status_id',  'country_id', 'is_two_fa', '!role_id',  'referred_by'], 'integer'],
+            [['status_id',  'ip_country_id', 'is_two_fa', '!role_id',  'referred_by'], 'integer'],
             [['time', 'updated_on'], 'safe'],
             [['identifier', 'auth_key'], 'string', 'max' => 500],
             [['username', 'first_name', 'last_name', 'email', 'two_fa_secret', 'referral_code'], 'string', 'max' => 200],
@@ -130,12 +130,12 @@ class Users extends BaseActiveRecord implements IdentityInterface
             [['ip'], 'string', 'max' => 50],
 
             [['email'], 'email'],
-            [[ 'username'], 'unique'],
-            [[ 'email'], 'unique'],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
 
             ['username', 'match', 'pattern' => '/^[A-Za-z0-9]{3,20}$/iU', 'message' => 'Username can be alphanumeric and minimum 3 characters and maximum 20. No spaces allowed.'],
 
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::class, 'targetAttribute' => ['country_id' => 'id']],
+            [['ip_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::class, 'targetAttribute' => ['ip_country_id' => 'id']],
             [['referred_by'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['referred_by' => 'id']],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRoles::class, 'targetAttribute' => ['role_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserStatus::class, 'targetAttribute' => ['status_id' => 'id']],
@@ -159,7 +159,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
             'password' => 'Password',
             'status_id' => 'Status ID',
             'code' => 'Code',
-            'country_id' => 'Country ID',
+            'ip_country_id' => 'Country ID',
             'time' => 'Time',
             'updated_on' => 'Updated On',
             'is_two_fa' => 'Is Two Fa',
@@ -202,7 +202,7 @@ class Users extends BaseActiveRecord implements IdentityInterface
      */
     public function getCountry()
     {
-        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
+        return $this->hasOne(Countries::className(), ['id' => 'ip_country_id']);
     }
 
     /**
@@ -384,10 +384,10 @@ class Users extends BaseActiveRecord implements IdentityInterface
             {
                 $db = new Database(Yii::getAlias("@app").'/data/ip2location_ipv6.bin', Database::FILE_IO);
                 $records = $db->lookup($this->ip, Database::ALL);
-                $u->country_id = Helper::getCountryFromCode($records['countryCode']);
+                $u->ip_country_id = Helper::getCountryFromCode($records['countryCode']);
             }
             else{
-                $u->country_id = Helper::getCountryFromCode($records['countryCode']);
+                $u->ip_country_id = Helper::getCountryFromCode($records['countryCode']);
             }
         } catch (Exception $e) {
         }

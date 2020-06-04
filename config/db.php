@@ -1,25 +1,9 @@
 <?php
-$host = 'localhost';
-$db='';
-$username='';
-$password='';
-
-//for offline development
-if(defined('YII_ENV'))
-{
-    if(YII_ENV == "dev")
-    {
-        $host = '127.0.0.1';
-        $username = 'root';
-        $db = 'base';
-        $password = 'mysql';
-    }
-}
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host='.$host.';dbname='.$db,
-    'username' => $username,
-    'password' => $password,
+    'dsn' => 'mysql:host='.$_ENV['DB_HOST'].';dbname='.$_ENV['DB_NAME'],
+    'username' => $_ENV['DB_USERNAME'],
+    'password' => $_ENV['DB_PASSWORD'],
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
