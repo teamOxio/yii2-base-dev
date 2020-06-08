@@ -1,3 +1,7 @@
+##Version 0.6.1 - by Prabhjyot Singh
+```
+Added gitignore
+```
 ##Version 0.6.0 - by Prabhjyot Singh
 ```
 Added BaseApiController, BaseActiveController
