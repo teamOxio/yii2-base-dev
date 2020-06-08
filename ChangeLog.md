@@ -1,3 +1,7 @@
+##Version 0.6.2 - by Prabhjyot Singh
+```
+Remove unnecessary functions from API AuthController
+```
 ##Version 0.6.1 - by Prabhjyot Singh
 ```
 Added gitignore
