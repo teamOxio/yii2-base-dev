@@ -12,7 +12,7 @@ use app\common\BaseActiveRecord;
  * @property string $time
  * @property string $ip
  * @property string $useragent
- * @property int|null $country_id
+ * @property int|null $ip_country_id
  *
  * @property Countries $country
  * @property Users $user
@@ -34,11 +34,11 @@ class UserLoginHistory extends BaseActiveRecord
     {
         return [
             [['user_id', 'ip', 'useragent'], 'required'],
-            [['user_id', 'country_id'], 'integer'],
+            [['user_id', 'ip_country_id'], 'integer'],
             [['time'], 'safe'],
             [['ip'], 'string', 'max' => 64],
             [['useragent'], 'string', 'max' => 800],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
+            [['ip_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['ip_country_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -54,7 +54,7 @@ class UserLoginHistory extends BaseActiveRecord
             'time' => 'Time',
             'ip' => 'Ip',
             'useragent' => 'Useragent',
-            'country_id' => 'Country ID',
+            'ip_country_id' => 'Country ID',
         ];
     }
 
@@ -65,7 +65,7 @@ class UserLoginHistory extends BaseActiveRecord
      */
     public function getCountry()
     {
-        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
+        return $this->hasOne(Countries::className(), ['id' => 'ip_country_id']);
     }
 
     /**

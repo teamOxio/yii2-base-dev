@@ -47,9 +47,9 @@ abstract class BaseActiveRecord extends ActiveRecord
                 }
             }
 
-            if($this->hasAttribute('country_id'))
+            if($this->hasAttribute('ip_country_id'))
             {
-                $this->setAttribute('country_id', $country);
+                $this->setAttribute('ip_country_id', $country);
             }
 
             if($this->hasAttribute('time'))
@@ -67,6 +67,89 @@ abstract class BaseActiveRecord extends ActiveRecord
         return parent::beforeValidate();
     }
 
+    public function parseFunctions($functions,$value='')
+    {
+        if(is_array($functions) && count($functions)>0)
+        {
+            foreach ($functions as $func)
+            {
+                if(is_array($func)) {
+                    foreach ($func as $key=>$val)
+                    {
+                        if($val=="{{val}}")
+                        {
+                            $func[$key]=$value;
+                        }
+                    }
+                    $value = call_user_func($func[0],
+                        ...array_slice($func, 1, count($func) - 1)
+                    );
+                }
+                else
+                    $value = call_user_func($func, $value);
+            }
+        }
+        else
+            $value = call_user_func($functions, $value);
+        return $value;
+    }
+    public function getCurrentTable($functions=null)
+    {
+        $table = self::tableName();
+        $table = str_replace('{{%','',$table);
+        $table = str_replace('}}','',$table);
+        if($functions!=null)
+        {
+            $table=$this->parseFunctions($functions,$table);
+        }
+        return $table;
+    }
+
+    public function getEncryptionSalt($attribute=null)
+    {
+        $salt=$this->getCurrentTable([
+            ['strtolower','{{val}}'],
+            ['str_replace','_','','{{val}}'],
+        ]);
+        if($attribute!=null)
+        {
+            if($this->hasAttribute($attribute))
+            {
+                $salt=$this->{$attribute};
+            }
+            else
+            {
+                $salt=null;
+            }
+        }
+        if($salt=="" || $salt==null)
+        {
+            throw new \Exception('Salt value not found');
+        }
+        return $salt;
+    }
+
+    /**
+     * @param $data
+     * @param string $attribute
+     * @return false|string
+     */
+    public function encryptModelData($data,$attribute=null)
+    {
+        $salt=$this->getEncryptionSalt($attribute);
+        return utf8_encode(Yii::$app->security->encryptByKey($data,hash("sha256",$salt)));
+    }
+
+    /**
+     * @param $data
+     * @param string $attribute
+     * @return bool|string
+     */
+    public function decryptModelData($data,$attribute=null)
+    {
+        $salt=$this->getEncryptionSalt($attribute);
+        return Yii::$app->security->decryptByKey(utf8_decode($data),hash("sha256",$salt));
+    }
 
     public function generateIdentifier(){
         $prefix = 'SYS'; //system prefix

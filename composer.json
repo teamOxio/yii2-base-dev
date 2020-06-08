@@ -24,6 +24,7 @@
         "phpseclib/phpseclib": "~2.0",
         "ext-json": "*",
       "ext-curl": "*",
+        "symfony/dotenv": "^5.2@dev",
         "sizeg/yii2-jwt": "dev-master",
         "xj/yii2-user-agent": "dev-master"
     },

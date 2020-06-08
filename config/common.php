@@ -1,5 +1,5 @@
 <?php
 return [
-    'name'=>'Basic App',
-    'timezone' => 'Asia/Kolkata',
+    'name'=>$_ENV['APP_NAME'],
+    'timezone' => $_ENV['APP_TIMEZONE'],
 ];

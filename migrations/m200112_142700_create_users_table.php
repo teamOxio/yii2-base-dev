@@ -23,14 +23,14 @@ class m200112_142700_create_users_table extends Migration
         $this->createTable('{{%users}}', [
             'id' => $this->primaryKey(),
             'identifier' => $this->string(500)->notNull(),
-            'username' => $this->string(200)->notNull(),
+            'username' => $this->string(200)->notNull()->unique(),
             'first_name' => $this->string(200),
             'last_name' => $this->string(200),
-            'email' => $this->string(200)->notNull(),
+            'email' => $this->string(200)->notNull()->unique(),
             'password' => $this->string(600)->notNull(),
             'status_id' => $this->integer()->notNull(),
             'code' => $this->string(800),
-            'country_id' => $this->integer(),
+            'ip_country_id' => $this->integer(),
             'time' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_on' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'is_two_fa' => $this->integer()->notNull()->defaultValue(0),
@@ -78,18 +78,18 @@ class m200112_142700_create_users_table extends Migration
             'CASCADE'
         );
 
-        // creates index for column `country_id`
+        // creates index for column `ip_country_id`
         $this->createIndex(
-            '{{%idx-users-country_id}}',
+            '{{%idx-users-ip_country_id}}',
             '{{%users}}',
-            'country_id'
+            'ip_country_id'
         );
 
         // add foreign key for table `{{%countries}}`
         $this->addForeignKey(
-            '{{%fk-users-country_id}}',
+            '{{%fk-users-ip_country_id}}',
             '{{%users}}',
-            'country_id',
+            'ip_country_id',
             '{{%countries}}',
             'id',
             'CASCADE'
@@ -145,13 +145,13 @@ class m200112_142700_create_users_table extends Migration
 
         // drops foreign key for table `{{%countries}}`
         $this->dropForeignKey(
-            '{{%fk-users-country_id}}',
+            '{{%fk-users-ip_country_id}}',
             '{{%users}}'
         );
 
-        // drops index for column `country_id`
+        // drops index for column `ip_country_id`
         $this->dropIndex(
-            '{{%idx-users-country_id}}',
+            '{{%idx-users-ip_country_id}}',
             '{{%users}}'
         );
 

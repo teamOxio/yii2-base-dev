@@ -15,7 +15,7 @@ use app\common\BaseActiveRecord;
  * @property string $useragent
  * @property string|null $type
  * @property string|null $data
- * @property int|null $country_id
+ * @property int|null $ip_country_id
  *
  * @property Countries $country
  * @property Users $user
@@ -37,12 +37,12 @@ class Logs extends BaseActiveRecord
     {
         return [
             [['user_id', 'ip', 'useragent'], 'required'],
-            [['user_id', 'country_id'], 'integer'],
+            [['user_id', 'ip_country_id'], 'integer'],
             [['particulars'], 'string'],
             [['time','data'], 'safe'],
             [['ip'], 'string', 'max' => 64],
             [['useragent', 'type'], 'string', 'max' => 800],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
+            [['ip_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['ip_country_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -61,7 +61,7 @@ class Logs extends BaseActiveRecord
             'useragent' => 'Useragent',
             'type' => 'Type',
             'data' => 'Data',
-            'country_id' => 'Country ID',
+            'ip_country_id' => 'Country ID',
         ];
     }
 
@@ -72,7 +72,7 @@ class Logs extends BaseActiveRecord
      */
     public function getCountry()
     {
-        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
+        return $this->hasOne(Countries::className(), ['id' => 'ip_country_id']);
     }
 
     /**

@@ -68,7 +68,7 @@ class Countries extends BaseActiveRecord
      */
     public function getLogs()
     {
-        return $this->hasMany(Logs::className(), ['country_id' => 'id']);
+        return $this->hasMany(Logs::className(), ['ip_country_id' => 'id']);
     }
 
     /**
@@ -78,7 +78,7 @@ class Countries extends BaseActiveRecord
      */
     public function getUserLoginHistories()
     {
-        return $this->hasMany(UserLoginHistory::className(), ['country_id' => 'id']);
+        return $this->hasMany(UserLoginHistory::className(), ['ip_country_id' => 'id']);
     }
 
     /**
@@ -88,6 +88,6 @@ class Countries extends BaseActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(Users::className(), ['country_id' => 'id']);
+        return $this->hasMany(Users::className(), ['ip_country_id' => 'id']);
     }
 }
