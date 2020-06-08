@@ -62,5 +62,16 @@ class Constants
     const CMD_ENABLE_TWO_FA = 'enable_two_fa';
     const CMD_DISABLE_TWO_FA = 'disable_two_fa';
 
+    const SECONDS_JWT_IS_VALID = 3600;//1 hour
+
+    const JWT_IDENTIFIER = '4f1m2003ffeleadmedia';
+
+    const CORS_ALLOWED_DOMAINS = array(
+        'http://localhost:4200','https://localhost:4200'
+    );
+
+    const CORS_ALLOWED_HEADERS = array(
+        'Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
 }
 

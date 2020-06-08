@@ -1,4 +1,7 @@
 <?php
+header('Access-Control-Allow-Methods: DELETE,OPTIONS,PUT,POST');
+header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
+header('Access-Control-Allow-Origin: *');
 $localhost = false;
 if(array_key_exists('REMOTE_ADDR',$_SERVER))
 {

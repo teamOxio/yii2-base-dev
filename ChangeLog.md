@@ -1,3 +1,13 @@
+##Version 0.6.0 - by Prabhjyot Singh
+```
+Added BaseApiController, BaseActiveController
+Added JWT authentication library
+Implemented Users::findIdentityByAccessToken and postLogin to support JWT
+Added urlManager block for REST routes
+Added EntityMapper and ApiUserModel Entity
+Added AuthController for API login
+Increased hash column length to 800 in user_sessions table
+```
 ##Version 0.5.3 - by Prabhjyot Singh
 ```
 Added ProtectedController

@@ -1,5 +1,8 @@
 <?php
 
+use sizeg\jwt\Jwt;
+use sizeg\jwt\JwtValidationData;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $queue = require __DIR__ . '/queue.php';
@@ -14,7 +17,7 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'modules' => [
-        'api' => [
+        'v1' => [
             'class' => 'app\modules\api\ApiModule',
         ],
     ],
@@ -28,6 +31,11 @@ $config = [
         ],
         'request' => [
             'cookieValidationKey' => 'dnmw4fGnucdxIB8DPVsjRzjSwrNGy4__',
+        ],
+        'jwt' => [
+            'class' => Jwt::class,
+            'key'   => '4fGnucdxIB8DPVdnmw4fGsjRzjSwrNGy4',
+            'jwtValidationData' => JwtValidationData::class,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -61,16 +69,23 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                //FOR RESTFUL APIs, uncomment this section
-                /*
+                /* Uncomment for RESTful Active Controllers
                 [
                     'class' => 'yii\rest\UrlRule',
+
                     'controller' => [
-                        'v1/countries'=>'api/countries',
+
                     ],
-                    'pluralize'=>false
+//                    'pluralize'=>false,
+                    'tokens' => [
+                        '{id}' => '<id:([A-Za-z]+\.[\-a-zA-Z0-9\._]+)|(\d+)>',
+                    ],
+//                    'extraPatterns' => [
+//                        'OPTIONS {action}' => 'options',
+//                        'OPTIONS' => 'options'
+//                    ],
                 ],
-                */
+                 */
             ],
         ],
 

@@ -244,7 +244,13 @@ class Helper
         return $user;
     }
 
-
+    public static function allowCorsPreflight(){
+        if (Yii::$app->getRequest()->getMethod() == 'OPTIONS') {
+            Yii::$app->getResponse()->getHeaders()->set('Allow', 'DELETE POST GET PUT');
+            Yii::$app->getResponse()->setStatusCode(200);
+            Yii::$app->end();
+        }
+    }
 
 
 }

@@ -72,7 +72,7 @@ class LoginForm extends Model
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function login($jwt = false)
     {
         if ($this->validate()) {
             Yii::$app->session->set('rememberMe',$this->rememberMe);
@@ -83,7 +83,7 @@ class LoginForm extends Model
                     Yii::$app->session->set('login_two_fa',1);
                 }
 
-                $user->postLogin();
+                $user->postLogin($jwt);
                 return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
 
             }

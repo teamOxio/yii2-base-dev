@@ -4,6 +4,7 @@ namespace app\models\activerecord;
 
 use app\common\BaseActiveRecord;
 use app\common\Constants;
+use app\common\exceptions\PersistException;
 use app\common\Helper;
 use app\common\SystemLog;
 use Da\QrCode\QrCode;
@@ -12,7 +13,9 @@ use Da\TwoFA\Service\GoogleQrCodeUrlGeneratorService;
 use Da\TwoFA\Service\TOTPSecretKeyUriGeneratorService;
 use Exception;
 use IP2Location\Database;
+use Lcobucci\JWT\Token;
 use Yii;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
 use yii\web\IdentityInterface;
@@ -250,6 +253,44 @@ class Users extends BaseActiveRecord implements IdentityInterface
     }
 
     /**
+     * Finds an identity by the given token.
+     * @param \Lcobucci\JWT\Token $token
+     * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
+     * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
+     * @return null|\yii\db\ActiveRecord
+     * Null should be returned if such an identity cannot be found
+     * or the identity is not in an active state (disabled, deleted, etc.)
+     * @throws PersistException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        $identity = null;
+        $jwt = Yii::$app->jwt;
+        $signer = $jwt->getSigner('HS256');
+        $key = $jwt->getKey();
+
+        //validate token
+        if($token->verify($signer,$key)) {
+
+            $identity = self::find()
+                ->where([
+                    'identifier'=>$token->getClaim('user_identifier')
+                ])->one();
+            if($identity) {
+                //verify hash
+                $session = UserSessions::find()
+                    ->where(['hash' => (string)$token])
+                    ->one();
+                if($session == null)
+                    $identity = null;
+            }
+
+        }
+
+        return $identity;
+    }
+
+    /**
      * Finds an identity by the given ID.
      * @param string|int $id the ID to be looked for
      * @return IdentityInterface|null the identity object that matches the given ID.
@@ -259,20 +300,6 @@ class Users extends BaseActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         return self::findOne($id);
-    }
-
-    /**
-     * Finds an identity by the given token.
-     * @param mixed $token the token to be looked for
-     * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
-     * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
-     * @return IdentityInterface|null the identity object that matches the given token.
-     * Null should be returned if such an identity cannot be found
-     * or the identity is not in an active state (disabled, deleted, etc.)
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        return null;
     }
 
     /**
@@ -372,7 +399,9 @@ class Users extends BaseActiveRecord implements IdentityInterface
         return true;
     }
 
-    public function postLogin(){
+    public function postLogin($jwt = false){
+
+        $this->isSessionUnique();
 
         //insert
         $u = new UserLoginHistory();
@@ -407,38 +436,58 @@ class Users extends BaseActiveRecord implements IdentityInterface
             $this->username
         );
 
-        //check session
-        $check = UserSessions::find()->where(['user_id'=>$this->id])->one();
-        if($check!=null ){
-            Yii::$app->session->setFlash('error','You are already logged in on a different device. Please logout first.');
-            Yii::$app->user->logout();
-            return false;
-        }
+        if($jwt){
 
-        $hash_string = $this->username.':'.$u->useragent.':'.$u->ip;
-        $hash = hash("sha256",$hash_string);
+            $time = time();
+            $jwt = Yii::$app->jwt;
+            $signer = $jwt->getSigner('HS256');
+            $key = $jwt->getKey();
+
+            /** @var Token $token */
+            $token = $jwt->getBuilder()
+                ->issuedBy(Url::base(true))
+                ->permittedFor(Url::base(true))
+                ->identifiedBy(Constants::JWT_IDENTIFIER, true)
+                ->issuedAt($time)
+                ->withClaim('user_identifier',$this->identifier)
+                ->canOnlyBeUsedAfter($time)
+                ->expiresAt($time + Constants::SECONDS_JWT_IS_VALID) // Configures the expiration time of the token (exp claim)
+                ->getToken($signer,$key);
+
+
+            $hash = (string)$token;
+
+        }
+        else {
+            $hash_string = $this->username . ':' . $u->useragent . ':' . $u->ip;
+            $hash = hash("sha256", $hash_string);
+
+            //set cookie for re-login
+            if(Yii::$app->session->has('rememberMe')
+                &&
+                Yii::$app->session->get('rememberMe')===true
+            ) {
+                Yii::$app->response->cookies->add(new Cookie([
+                    'name' => 'auth-verification',
+                    'value' => Yii::$app->security->encryptByKey(
+                        $this->username
+                        , Yii::$app->request->cookieValidationKey),
+                    'expire' => time() + (86400 * 30) //1 month
+                ]));
+            }
+
+            Yii::$app->session->set('session_hash',$hash);
+
+        }
 
         //create session
         $session  = new UserSessions();
         $session->expires = date("Y-m-d H:i:s",strtotime("+20 minutes"));
         $session->hash = $hash;
         $session->user_id = $this->id;
-        $session->save();
 
-        Yii::$app->session->set('session_hash',$hash);
-
-        //set cookie for re-login
-        if(Yii::$app->session->has('rememberMe')
-            &&
-            Yii::$app->session->get('rememberMe')===true
-        ) {
-            Yii::$app->response->cookies->add(new Cookie([
-                'name' => 'auth-verification',
-                'value' => Yii::$app->security->encryptByKey(
-                    $this->username
-                    , Yii::$app->request->cookieValidationKey),
-                'expire' => time() + (86400 * 30) //1 month
-            ]));
+        if(!$session->save()){
+            throw new PersistException($session);
         }
 
         return true;
@@ -612,5 +661,21 @@ class Users extends BaseActiveRecord implements IdentityInterface
 
         return true;
 
+    }
+
+    public function getSessionHash(){
+        if(Yii::$app->user->isGuest)
+            return false;
+
+        //get session
+        $session = UserSessions::find()
+            ->where(['user_id'=>$this->id])
+            ->orderBy("id DESC")
+            ->one();
+
+        if($session)
+            return $session->hash;
+
+        return false;
     }
 }
