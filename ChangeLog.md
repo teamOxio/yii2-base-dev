@@ -1,3 +1,8 @@
+##Version 0.6.3 - by Prabhjyot Singh
+```
+Bug fixed in ProtectedController while redirecting
+Bug fixed in setting returnUrl in BaseController
+```
 ##Version 0.6.2 - by Prabhjyot Singh
 ```
 Remove unnecessary functions from API AuthController

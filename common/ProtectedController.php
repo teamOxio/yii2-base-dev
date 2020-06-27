@@ -12,7 +12,7 @@ class ProtectedController extends BaseController
     public function beforeAction($action)
     {
         if(Yii::$app->user->isGuest)
-            return $this->redirectTo(['site/login'])->send();
+            return $this->redirectTo(['site/login']);
 
         parent::beforeAction($action);
 

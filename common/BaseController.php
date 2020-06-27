@@ -16,9 +16,11 @@ abstract class BaseController extends Controller
 
     public function afterAction($action,$result)
     {
-        Yii::$app->user->setReturnUrl(
-            [Yii::$app->controller->id."/".$action->id]
-        );
+        if($action->id != 'error') {
+            Yii::$app->user->setReturnUrl(
+                [Yii::$app->controller->id . "/" . $action->id]
+            );
+        }
 
         return parent::afterAction($action,$result);
     }

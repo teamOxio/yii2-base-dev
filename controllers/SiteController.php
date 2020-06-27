@@ -2,15 +2,15 @@
 
 namespace app\controllers;
 
+use app\common\BaseController;
 use app\models\base\ContactForm;
 use app\models\base\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\Response;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * {@inheritdoc}
