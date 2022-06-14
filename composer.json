@@ -20,7 +20,7 @@
         "ip2location/ip2location-php": "dev-master",
         "2amigos/2fa-library": "^1.0@dev",
         "kriswallsmith/buzz": "dev-master",
-        "guzzlehttp/guzzle": "^5.3",
+        "guzzlehttp/guzzle": "^6.5",
         "phpseclib/phpseclib": "~2.0",
         "ext-json": "*",
       "ext-curl": "*",
